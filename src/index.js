@@ -56,7 +56,7 @@ app.post("/frete", async (req, res) => {
     Authorization: `Bearer ${process.env.TOKEN}`,
     'Content-Type': 'application/json'
     }})
-    res.send(data.data[0])
+    return res.send(data.data[0])
   })
 
 const port = process.env.PORT || 5000;

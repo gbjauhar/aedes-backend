@@ -38,6 +38,7 @@ app.get("/users", async (req, res) => {
 
 app.post("/frete", async (req, res) => {
   const { cepTo } = req.body
+
   const data = await axios.post('https://www.melhorenvio.com.br/api/v2/me/shipment/calculate',
     {
       "from": {
@@ -56,7 +57,39 @@ app.post("/frete", async (req, res) => {
     Authorization: `Bearer ${process.env.TOKEN}`,
     'Content-Type': 'application/json'
     }})
-    return res.send(data.data[0])
+
+    const result = await axios.get(`https://viacep.com.br/ws/${cepTo}/json/`);
+
+    const toReturn = {
+      custom_price: data.data[0].custom_price,
+      state: result.data.uf
+    }
+
+    return res.send(toReturn)
+  })
+
+app.post("/card", async (req, res) => {
+    const data = await axios.post(process.env.PLATECH_URL,
+     { ...req.body, on_behalf_of: process.env.PLATECH_ONBEHALF}, {
+        auth: {
+          username: process.env.PLATECH_API_KEY,
+          password: ''
+        }
+      })
+      return res.send(data.data)
+
+})
+
+app.post("/pix", async (req, res) => {
+
+  const data = await axios.post(process.env.PLATECH_URL,
+    { ...req.body, on_behalf_of: process.env.PLATECH_ONBEHALF}, {
+      auth: {
+        username: process.env.PLATECH_API_KEY,
+        password: ''
+      }
+    })
+    return res.send(data.data)
   })
 
 const port = process.env.PORT || 5000;

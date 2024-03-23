@@ -82,7 +82,7 @@ app.post("/card", async (req, res) => {
 
 app.post("/pix", async (req, res) => {
 
-  const data = await axios.post(process.env.PLATECH_URL,
+  const data = await axios.post(process.env.PLATECH_URL_PIX,
     { ...req.body, on_behalf_of: process.env.PLATECH_ONBEHALF}, {
       auth: {
         username: process.env.PLATECH_API_KEY,
